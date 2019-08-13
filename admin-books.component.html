@@ -1,0 +1,115 @@
+<div class="rounded shadow bg-white p-5">
+    <div class="row">
+        <div class="col-12 d-flex">
+            <h2 class="font-weight-light"><i class="fas fa-home"></i> Books Library</h2>
+            <button
+            class="btn btn-primary ml-auto"
+            type="button"
+            data-toggle="modal"
+            data-target="#booksFormModal"
+            (click)="onResetForm()"
+            ><i class="fas fa-plus"></i> Add a book</button>
+        <!-- </div> -->
+    <!-- </div> -->
+
+ <hr class="mt-1 mb-5 bg-dark">
+ <div class="row">
+    <div class="col-12 shadow-sm p4 mb3 bg-light" *ngFor="let book of books; let i = index">
+        <div class="row">
+            <div class="com-sm-12 col-md-2 d-flex">
+                <div *ngFor="let photo of book.photos; let first = first">
+                    <img [src]="photo" style="width: 100px;" *ngIf="first">
+                </div>
+                <h4 class="font-weight-light m-auto" *ngIf="!book.photos || book.photos.length == 0">No book</h4>
+            </div>
+
+            <div class="col-sm-12 col-md-10">
+                    <div class="row">
+                    <h3 class="font-weight-normal pl-3">{{ book.title }}</h3>
+                            <div class="ml-auto">
+                                <button class="btn btn-primary m-1" 
+                                type="button"
+                                (click)="onEditBook(book, i)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger m-1" type="button"
+                                (click)="onDeleteBook(book)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="lead">
+                            {{book.category}}
+                        </p>
+
+            </div>
+        </div>
+    </div>
+ </div>
+
+
+
+ <!-- Modal -->
+ <div class="modal fade" id="booksFormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content p-5">
+      <h3 class="font-weight-light">Edit book</h3>
+      <hr class="mt-0 bg-dark">
+        <form class="py-5" [formGroup]="bookForm" (ngSubmit)="onSaveBook()">
+            <input type="text" formControlName="id" hidden>
+            <div class="form-group">
+                <input type="text" placeholder="Titre" formControlName="title" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label for="category" class="input-group-text">Category</label>
+                </div>
+                <select id="category" class="custom-select" formControlName="category">
+                    <option value="networking">Networking</option>
+                    <option value="programming">Programming</option>
+                </select>
+            </div>
+            <div class="form-row">
+            </div>
+            <div class="form-group">
+                <textarea rows="4" placeholder="Description" formControlName="description" class="form-control w-100"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Price" formControlName="price" class="form-control">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="chooseImgSpan">Add book</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file"
+                     class="custom-file-input"
+                     aria-describedby="chooseImgSpan"
+                     (change)="detectFile($event)"
+                     accept="image/*">
+                     <label for="photo" class="custom-file-label">Choisir...</label>
+                </div>
+            </div>
+            <small class="text-warning" *ngIf="photoUploading">Loadding...</small>
+            <small class="text-success" *ngIf="photoUploaded">Added</small>
+            
+           
+            <div class="row">
+                <div class="col-4 position-relative border border-secondary rounded m-1 p-1 bg-light"
+                *ngFor="let photo of photosAdded; let i = index">
+                    <span class="text-danger position-absolute mr-1 deletePhoto"
+                    (click)="onRemoveAddedPhoto(i)">
+                        <i class="fas fa-times"></i>
+                    </span>
+                    <img [src]="photo" alt="photo" class="w-100">
+            </div>
+        </div>
+
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit" [disabled]="bookForm.invalid">Registered</button>
+            </div>
+        </form>
+    </div>
+  </div>
+ </div>
